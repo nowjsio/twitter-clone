@@ -57,7 +57,7 @@ export async function getById(id) {
 }
 export async function create(text, name, username, url) {
   const tweet = {
-    id: new String(parseInt(tweets[Object.keys(tweets).length - 1].id) + 1),
+    id: String(parseInt(tweets[Object.keys(tweets).length - 1].id, 10) + 1),
     text,
     createdAt: new Date(),
     name,
@@ -81,6 +81,7 @@ export async function remove(id) {
       tweets.splice(index, 1);
       return true;
     }
+    return false;
   });
 }
 // NOTE: export function ... 이렇게 하던가, export { getAll, getAllByUsername } 이렇게 하던가..
