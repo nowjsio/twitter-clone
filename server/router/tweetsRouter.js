@@ -1,5 +1,6 @@
-import express from "express";
-import * as tweetController from "../controller/tweet.js";
+import express from 'express';
+import * as tweetController from '../controller/tweet.js';
+
 const router = express.Router();
 
 /**
@@ -7,13 +8,13 @@ const router = express.Router();
  * success: 200, json
  * failed: 404,
  */
-router.get("/", tweetController.getRoot);
+router.get('/', tweetController.getRoot);
 
-router.get("/:id", tweetController.getId);
+router.get('/:id', tweetController.getId);
 
-router.post("/", tweetController.postRoot);
+router.post('/', tweetController.postRoot);
 
-//NOTE: AS-IS 잘못된 코드.. 이렇게 하면, tweet 이 업데이트 되지 않는다.
+// NOTE: AS-IS 잘못된 코드.. 이렇게 하면, tweet 이 업데이트 되지 않는다.
 // router.put(
 //   "/:id",
 //   (req, res, next) => {
@@ -32,8 +33,8 @@ router.post("/", tweetController.postRoot);
 //     console.log("after second next() called");
 //   }
 // );
-//NOTE: TO-BE 잘 된 코드.. 이렇게 하면 tweet  이 자동으로 업데이트 된다.
-router.put("/:id", tweetController.putId);
-router.delete("/:id", tweetController.deleteId);
+// NOTE: TO-BE 잘 된 코드.. 이렇게 하면 tweet  이 자동으로 업데이트 된다.
+router.put('/:id', tweetController.putId);
+router.delete('/:id', tweetController.deleteId);
 
 export default router;

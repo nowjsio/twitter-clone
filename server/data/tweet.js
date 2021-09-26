@@ -1,12 +1,11 @@
 const tweetSchema = {
-  id: "string",
-  text: "string",
+  id: 'string',
+  text: 'string',
   createdAt: new Date(),
-  name: "string",
-  username: "string",
-  url: "optionalString",
+  name: 'string',
+  username: 'string',
+  url: 'optionalString',
 };
-
 const tweets = [
   //   {
   //     id: "1",
@@ -17,32 +16,32 @@ const tweets = [
   //     url: "https://www.jw.com",
   //   },
   {
-    id: "1",
-    text: "hello 1",
+    id: '1',
+    text: 'hello 1',
     createdAt: new Date(),
-    name: "Jw",
-    username: "jw",
+    name: 'Jw',
+    username: 'jw',
   },
   {
-    id: "2",
-    text: "hello 2",
+    id: '2',
+    text: 'hello 2',
     createdAt: new Date(),
-    name: "Bob",
-    username: "bob",
+    name: 'Bob',
+    username: 'bob',
   },
   {
-    id: "3",
-    text: "hello 3",
+    id: '3',
+    text: 'hello 3',
     createdAt: new Date(),
-    name: "Tester",
-    username: "tester",
+    name: 'Tester',
+    username: 'tester',
   },
   {
-    id: "4",
-    text: "hello 4",
+    id: '4',
+    text: 'hello 4',
     createdAt: new Date(),
-    name: "Jw",
-    username: "jw",
+    name: 'Jw',
+    username: 'jw',
   },
 ];
 export async function getAll() {
@@ -63,7 +62,7 @@ export async function create(text, name, username, url) {
     createdAt: new Date(),
     name,
     username,
-    url: !!url ? url : null,
+    url: url || null,
   };
   // NOTE: tweets 을 let 으로 바꾸는건 위험하다. 그러나 여기서는 그렇게함. let tweets = ...; tweets = [tweet, ...tweets];
   tweets.push(tweet);
@@ -84,7 +83,7 @@ export async function remove(id) {
     }
   });
 }
-//NOTE: export function ... 이렇게 하던가, export { getAll, getAllByUsername } 이렇게 하던가..
+// NOTE: export function ... 이렇게 하던가, export { getAll, getAllByUsername } 이렇게 하던가..
 // export {
 //   getAll,
 //   getAllByUsername,
