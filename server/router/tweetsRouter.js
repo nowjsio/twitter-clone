@@ -1,5 +1,6 @@
 import express from 'express';
 import * as tweetController from '../controller/tweet.js';
+import isAuth from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -8,11 +9,11 @@ const router = express.Router();
  * success: 200, json
  * failed: 404,
  */
-router.get('/', tweetController.getRoot);
+router.get('/', isAuth, tweetController.getRoot);
 
-router.get('/:id', tweetController.getId);
+router.get('/:id', isAuth, tweetController.getId);
 
-router.post('/', tweetController.postRoot);
+router.post('/', isAuth, tweetController.postRoot);
 
 // NOTE: AS-IS 잘못된 코드.. 이렇게 하면, tweet 이 업데이트 되지 않는다.
 // router.put(
@@ -34,7 +35,7 @@ router.post('/', tweetController.postRoot);
 //   }
 // );
 // NOTE: TO-BE 잘 된 코드.. 이렇게 하면 tweet  이 자동으로 업데이트 된다.
-router.put('/:id', tweetController.putId);
-router.delete('/:id', tweetController.deleteId);
+router.put('/:id', isAuth, tweetController.putId);
+router.delete('/:id', isAuth, tweetController.deleteId);
 
 export default router;
