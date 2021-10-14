@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import * as authRepository from '../data/auth.js';
+import * as userRepository from '../data/auth.js';
 // NOTE: https://www.lastpass.com/features/password-generator
 const jwtSecretKey = 'KwYBHLj&sCpzFkDmYPw1eH$vNnWRepgD';
 const jwtExpiresInDays = '2d';
@@ -12,7 +12,7 @@ async function createJwt(id) {
   return token;
 }
 export async function getMe(req, res, next) {
-  const user = await authRepository.findById(req.userId);
+  const user = await userRepository.findById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
   }
@@ -21,9 +21,9 @@ export async function getMe(req, res, next) {
 export async function postLogin(req, res, next) {
   // NOTE: validations, sanitization {username, password}
   const { username, password } = req.body;
-  const user = await authRepository.findByUsername(username);
+  const user = await userRepository.findByUsername(username);
   if (user) {
-    const result = await authRepository.comparePwd(password, user.password);
+    const result = await userRepository.comparePwd(password, user.password);
     if (result) {
       const token = await createJwt(user.id);
       return res.status(200).json({ token, username });
@@ -33,12 +33,12 @@ export async function postLogin(req, res, next) {
 }
 export async function postSignup(req, res, next) {
   const { username, password, name, email, url } = req.body;
-  const user = await authRepository.findByUsername(username);
+  const user = await userRepository.findByUsername(username);
   if (user) {
     // NOTE: 409: 이미 데이터가 존재할 때 발생 시킬 수 있는 응답코드
     return res.status(409).json({ message: `${username} already exists` });
   }
-  const data = await authRepository.create(
+  const data = await userRepository.create(
     username,
     password,
     name,

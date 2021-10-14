@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 
 const tweetUsers = [
   {
-    id: 1633160310006,
+    id: '1',
     username: 'jw',
     password: '$2b$10$81ff831xKTnJCZPY2Ouz9.NjkLJi4kTGkzPGm640RiYGJG.W4.VWi',
     name: 'Jw',
@@ -10,7 +10,7 @@ const tweetUsers = [
     url: 'https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_1280.jpg',
   },
   {
-    id: 1633160310007,
+    id: '2',
     username: 'bob',
     password: '$2b$10$8/GI5YGw.2XzhQVxNUORfueL4atXtrc5xnE6D54IyIxDpLVmCIxai',
     name: 'Bow',

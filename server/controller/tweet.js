@@ -31,13 +31,9 @@ export async function getId(req, res, next) {
   }
 }
 export async function postRoot(req, res, next) {
-  const { text, name, username, url } = req.body;
-  if (!!text && !!name && !!username) {
-    const data = await tweetRepository.create(text, name, username, url);
-    res.status(201).json(data);
-  } else {
-    res.status(404).json({ message: 'your data is out of format' });
-  }
+  const { text } = req.body;
+  const tweet = await tweetRepository.create(text, req.userId);
+  res.status(201).json(tweet);
 }
 export async function putId(req, res, next) {
   console.log('other router put');
