@@ -13,7 +13,7 @@ const tweetUsers = [
     id: '2',
     username: 'bob',
     password: '$2b$10$8/GI5YGw.2XzhQVxNUORfueL4atXtrc5xnE6D54IyIxDpLVmCIxai',
-    name: 'Bow',
+    name: 'Bob',
     email: 'bob@gmail.com',
     url: 'https://cdn.pixabay.com/photo/2018/01/04/08/04/people-3060107_1280.jpg',
   },
