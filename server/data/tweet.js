@@ -1,3 +1,5 @@
+import * as userRepository from './auth.js';
+
 const tweetSchema = {
   id: 'string',
   text: 'string',
@@ -6,74 +8,72 @@ const tweetSchema = {
   username: 'string',
   url: 'optionalString',
 };
-const tweets = [
-  //   {
-  //     id: "1",
-  //     text: "hello 1",
-  //     createdAt: new Date(),
-  //     name: "Jw",
-  //     username: "jw",
-  //     url: "https://www.jw.com",
-  //   },
+let tweets = [
   {
     id: '1',
-    text: 'hello 1',
-    createdAt: new Date(),
-    name: 'Jw',
-    username: 'jw',
+    text: 'hello 1 by.jw',
+    createdAt: new Date().toString(),
+    userId: '1',
   },
   {
     id: '2',
-    text: 'hello 2',
-    createdAt: new Date(),
-    name: 'Bob',
-    username: 'bob',
+    text: 'hello 2 by.jw',
+    createdAt: new Date().toString(),
+    userId: '1',
   },
   {
     id: '3',
-    text: 'hello 3',
-    createdAt: new Date(),
-    name: 'Tester',
-    username: 'tester',
+    text: 'hello 1 by.bob',
+    createdAt: new Date().toString(),
+    userId: '2',
   },
   {
     id: '4',
-    text: 'hello 4',
-    createdAt: new Date(),
-    name: 'Jw',
-    username: 'jw',
+    text: 'hello 2 by.bob',
+    createdAt: new Date().toString(),
+    userId: '2',
   },
 ];
 export async function getAll() {
-  return tweets;
+  return Promise.all(
+    tweets.map(async (tweet) => {
+      const { username, name, url } = await userRepository.findById(
+        tweet.userId
+      );
+      return { ...tweet, username, name, url };
+    })
+  );
 }
 export async function getAllByUsername(userName) {
-  // export async function getAllTweetsByUserName
-  return tweets.filter((tweet) => tweet.username === userName);
+  return getAll().then((tweetList) =>
+    tweetList.filter((tweet) => tweet.username === userName)
+  );
 }
 export async function getById(id) {
+  const found = tweets.find((tweet) => tweet.id === id);
+  if (!found) {
+    return null;
+  }
+  const { username, name, url } = await userRepository.findById(found.userId);
+  return { ...found, username, name, url };
   // export async function getById
-  return tweets.find((tweet) => tweet.id === id);
 }
-export async function create(text, name, username, url) {
+export async function create(text, userId) {
   const tweet = {
-    id: String(parseInt(tweets[Object.keys(tweets).length - 1].id, 10) + 1),
+    id: new Date().toString(),
     text,
-    createdAt: new Date(),
-    name,
-    username,
-    url: url || null,
+    createdAt: new Date().toString(),
+    userId,
   };
-  // NOTE: tweets 을 let 으로 바꾸는건 위험하다. 그러나 여기서는 그렇게함. let tweets = ...; tweets = [tweet, ...tweets];
-  tweets.push(tweet);
-  return tweet;
+  tweets = [tweet, ...tweets];
+  return getById(tweet.id);
 }
 export async function update(id, text) {
-  const tweet = getById(id);
+  const tweet = tweets.find((tweetData) => tweetData.id === id);
   if (tweet) {
     tweet.text = text;
   }
-  return tweet;
+  return getById(tweet.id);
 }
 export async function remove(id) {
   return tweets.find((tweet, index) => {
