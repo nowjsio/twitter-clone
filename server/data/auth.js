@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import config from '../config.js';
 
 const tweetUsers = [
   {
@@ -19,7 +20,7 @@ const tweetUsers = [
   },
 ];
 async function createBcryptPwd(pwd) {
-  const bcryptedPwd = await bcrypt.hash(pwd, 10);
+  const bcryptedPwd = await bcrypt.hash(pwd, config.bcrypt.saltRounds);
   return bcryptedPwd;
 }
 

@@ -1,13 +1,11 @@
 import jwt from 'jsonwebtoken';
+import config from '../config.js';
 
 import * as userRepository from '../data/auth.js';
-// NOTE: https://www.lastpass.com/features/password-generator
-const jwtSecretKey = 'KwYBHLj&sCpzFkDmYPw1eH$vNnWRepgD';
-const jwtExpiresInDays = '2d';
 
 async function createJwt(id) {
-  const token = jwt.sign({ id }, jwtSecretKey, {
-    expiresIn: jwtExpiresInDays,
+  const token = jwt.sign({ id }, config.jwt.secretKey, {
+    expiresIn: config.jwt.expiresInSec,
   });
   return token;
 }

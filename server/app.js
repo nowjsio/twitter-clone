@@ -3,8 +3,12 @@ import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
 import 'express-async-errors';
+import dotenv from 'dotenv';
 import tweetsRouter from './router/tweetsRouter.js';
 import authRouter from './router/authRouter.js';
+import config from './config.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -25,4 +29,4 @@ app.use((error, req, res, next) => {
   res.status(500).send('Sorry server error occurred');
 });
 
-app.listen(8080);
+app.listen(config.host.port);
