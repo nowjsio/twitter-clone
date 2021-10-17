@@ -8,8 +8,6 @@ import tweetsRouter from './router/tweetsRouter.js';
 import authRouter from './router/authRouter.js';
 import config from './config.js';
 
-dotenv.config();
-
 const app = express();
 
 app.use(cors());
