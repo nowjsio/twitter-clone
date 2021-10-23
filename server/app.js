@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import 'express-async-errors';
 import dotenv from 'dotenv';
+import { Server } from 'socket.io';
 import tweetsRouter from './router/tweetsRouter.js';
 import authRouter from './router/authRouter.js';
 import config from './config.js';
@@ -27,4 +28,14 @@ app.use((error, req, res, next) => {
   res.status(500).send('Sorry server error occurred');
 });
 
-app.listen(config.host.port);
+const server = app.listen(config.host.port);
+const socketIO = new Server(server, {
+  cors: {
+    origin: '*',
+  },
+});
+
+socketIO.on('connection', (socket) => {
+  console.log('Client is here!');
+  socketIO.emit('dwitter', 'Hello🤚');
+});
