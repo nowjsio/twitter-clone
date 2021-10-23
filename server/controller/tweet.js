@@ -1,4 +1,5 @@
 import * as tweetRepository from '../data/tweet.js';
+import { getSocketIO } from '../connection/socket.js';
 
 export async function getRoot(req, res, next) {
   const userName = req.query.username;
@@ -34,18 +35,19 @@ export async function postRoot(req, res, next) {
   const { text } = req.body;
   const tweet = await tweetRepository.create(text, req.userId);
   res.status(201).json(tweet);
+  getSocketIO().emit('tweets', tweet);
 }
 export async function putId(req, res, next) {
   const { id } = req.params;
   const { text } = req.body;
   const tweet = await tweetRepository.getById(id);
   if (!tweet) {
-    return res.sendStatus(404);
+    res.sendStatus(404);
   }
   if (tweet.userId !== req.userId) {
     // NOTE: 401: 로그인이 필요한 서비스인데, 로그인이 안되어있을 때
     // NOTE: 403: 로그인 된 사용자지만 권한이 없을 때
-    return res.sendStatus(403);
+    res.sendStatus(403);
   }
   const updated = await tweetRepository.update(id, text);
   res.status(200).json(updated);
@@ -54,12 +56,12 @@ export async function deleteId(req, res, next) {
   const { id } = req.params;
   const tweet = await tweetRepository.getById(id);
   if (!tweet) {
-    return res.sendStatus(400);
+    res.sendStatus(400);
   }
   if (tweet.userId !== req.userId) {
-    return res.sendStatus(403);
+    res.sendStatus(403);
   }
   await tweetRepository.remove(id);
-  return res.sendStatus(204);
+  res.sendStatus(204);
 }
 // export { getRoot, getId, postRoot, putId, deleteId };

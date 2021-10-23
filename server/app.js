@@ -8,6 +8,7 @@ import { Server } from 'socket.io';
 import tweetsRouter from './router/tweetsRouter.js';
 import authRouter from './router/authRouter.js';
 import config from './config.js';
+import { initSocket } from './connection/socket.js';
 
 const app = express();
 
@@ -29,13 +30,4 @@ app.use((error, req, res, next) => {
 });
 
 const server = app.listen(config.host.port);
-const socketIO = new Server(server, {
-  cors: {
-    origin: '*',
-  },
-});
-
-socketIO.on('connection', (socket) => {
-  console.log('Client is here!');
-  socketIO.emit('dwitter', 'Hello🤚');
-});
+initSocket(server);
