@@ -29,6 +29,12 @@ app.use((error, req, res, next) => {
   console.error('[!] error found', error);
   res.status(500).send('Sorry server error occurred');
 });
-db.getConnection().then((connection) => console.log(connection));
-const server = app.listen(config.host.port);
-initSocket(server);
+db.getConnection()
+  .then(() => {
+    const server = app.listen(config.host.port);
+    initSocket(server);
+  })
+  .catch(err => {
+    console.error(`[!] mysql didn't launched`);
+    console.error(err);
+  });
