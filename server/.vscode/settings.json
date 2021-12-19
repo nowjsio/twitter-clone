@@ -1,0 +1,15 @@
+{
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#190dc0",
+        "titleBar.inactiveBackground": "#7770d8"
+    },
+    "explorer.compactFolders": false,
+    "editor.formatOnSave": true,
+    "javascript.format.enable": false,
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+      }
+    }
+}
