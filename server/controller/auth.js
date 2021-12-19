@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import config from '../config.js';
 
 import * as userRepository from '../data/auth.js';
@@ -21,8 +22,8 @@ export async function postLogin(req, res, next) {
   const { username, password } = req.body;
   const user = await userRepository.findByUsername(username);
   if (user) {
-    const result = await userRepository.comparePwd(password, user.password);
-    if (result) {
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (isValidPassword) {
       const token = await createJwt(user.id);
       return res.status(200).json({ token, username });
     }
@@ -36,15 +37,16 @@ export async function postSignup(req, res, next) {
     // NOTE: 409: 이미 데이터가 존재할 때 발생 시킬 수 있는 응답코드
     return res.status(409).json({ message: `${username} already exists` });
   }
-  const data = await userRepository.create(
+  const hashedPassword = await bcrypt.hash(password, config.bcrypt.saltRounds);
+  const id = await userRepository.createUser({
     username,
-    password,
+    password: hashedPassword,
     name,
     email,
-    url
-  );
-  if (data) {
-    const token = await createJwt(data.id);
+    url,
+  });
+  if (id) {
+    const token = await createJwt(id);
     return res.status(200).json({ token, username });
   }
   return (

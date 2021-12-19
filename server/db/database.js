@@ -8,4 +8,5 @@ const pool = mysql.createPool({
   database: config.db.database,
 });
 
+// eslint-disable-next-line import/prefer-default-export
 export const db = pool.promise();
