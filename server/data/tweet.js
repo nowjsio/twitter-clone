@@ -48,8 +48,15 @@ export async function create(text, userId) {
 
 export async function update(id, text) {
   return db
-    .execute('UPDATE tweets SET text=? WHERE (id=?)', [text, id])
-    .then(() => getById(id));
+    .execute('UPDATE tweets SET text=?,createdAt=? WHERE (id=?)', [
+      text,
+      new Date(),
+      id,
+    ])
+    .then(async () => {
+      const updatedTweet = await getById(id);
+      return updatedTweet;
+    });
 }
 
 export async function remove(id) {
