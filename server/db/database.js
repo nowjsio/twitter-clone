@@ -1,12 +1,11 @@
-import mysql from 'mysql2';
+import SQ from 'sequelize';
 import config from '../config.js';
 
-const pool = mysql.createPool({
-  host: config.db.host,
-  user: config.db.user,
-  password: config.db.password,
-  database: config.db.database,
+const { host, user, password, database } = config.db;
+const sequelize = new SQ.Sequelize(database, user, password, {
+  dialect: 'mysql',
+  host,
+  logging: false,
 });
 
-// eslint-disable-next-line import/prefer-default-export
-export const db = pool.promise();
+export default sequelize;

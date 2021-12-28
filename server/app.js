@@ -9,7 +9,8 @@ import tweetsRouter from './router/tweetsRouter.js';
 import authRouter from './router/authRouter.js';
 import config from './config.js';
 import { initSocket } from './connection/socket.js';
-import { db } from './db/database.js';
+// import sequelize from './db/database.js';
+import sequelize from './db/database.js';
 
 const app = express();
 
@@ -29,12 +30,8 @@ app.use((error, req, res, next) => {
   console.error('[!] error found', error);
   res.status(500).send('Sorry server error occurred');
 });
-db.getConnection()
-  .then(() => {
-    const server = app.listen(config.host.port);
-    initSocket(server);
-  })
-  .catch(err => {
-    console.error(`[!] mysql didn't launched`);
-    console.error(err);
-  });
+
+sequelize.sync().then(data => {
+  const server = app.listen(config.host.port);
+  initSocket(server);
+});

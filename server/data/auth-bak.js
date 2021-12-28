@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import config from '../config.js';
-import { db } from '../db/database.js';
+import sequelize from '../db/database.js';
 
 const tweetUsers = [
   {
