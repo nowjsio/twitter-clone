@@ -9,6 +9,7 @@ import tweetsRouter from './router/tweetsRouter.js';
 import authRouter from './router/authRouter.js';
 import config from './config.js';
 import { initSocket } from './connection/socket.js';
+import connectDB from './database/database.js';
 
 const app = express();
 
@@ -28,6 +29,11 @@ app.use((error, req, res, next) => {
   console.error('[!] error found', error);
   res.status(500).send('Sorry server error occurred');
 });
-
-const server = app.listen(config.host.port);
-initSocket(server);
+connectDB()
+  .then(db => {
+    console.log(db.options);
+    console.log('mongoDB init!');
+    const server = app.listen(config.host.port);
+    initSocket(server);
+  })
+  .catch(console.error);

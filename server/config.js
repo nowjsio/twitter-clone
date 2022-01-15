@@ -22,5 +22,8 @@ const config = {
   host: {
     port: parseInt(required(`HOST_PROT`, 3004), 10),
   },
+  db: {
+    host: required('DB_URL'),
+  },
 };
 export default config;
