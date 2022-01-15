@@ -20,5 +20,6 @@ module.exports = {
     'no-unused-vars': 'off',
     'import/extensions': 'off',
     'no-extra-boolean-cast': 'off',
+    'no-underscore-dangle': 'off',
   },
 };
