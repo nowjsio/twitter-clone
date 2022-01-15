@@ -31,7 +31,6 @@ app.use((error, req, res, next) => {
 });
 connectDB()
   .then(db => {
-    console.log(db.options);
     console.log('mongoDB init!');
     const server = app.listen(config.host.port);
     initSocket(server);

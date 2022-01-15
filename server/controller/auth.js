@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import config from '../config.js';
 
 import * as userRepository from '../data/auth.js';
+import { comparePwd } from '../service/password.js';
 
 async function createJwt(id) {
   const token = jwt.sign({ id }, config.jwt.secretKey, {
@@ -21,7 +22,7 @@ export async function postLogin(req, res, next) {
   const { username, password } = req.body;
   const user = await userRepository.findByUsername(username);
   if (user) {
-    const result = await userRepository.comparePwd(password, user.password);
+    const result = await comparePwd(password, user.bcryptedPassword);
     if (result) {
       const token = await createJwt(user.id);
       return res.status(200).json({ token, username });
@@ -41,7 +42,7 @@ export async function postSignup(req, res, next) {
     password,
     name,
     email,
-    url
+    url,
   );
   if (data) {
     const token = await createJwt(data.id);
