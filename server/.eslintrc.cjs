@@ -21,5 +21,6 @@ module.exports = {
     'import/extensions': 'off',
     'no-extra-boolean-cast': 'off',
     'no-underscore-dangle': 'off',
+    'no-use-before-define': 'off',
   },
 };
