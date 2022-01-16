@@ -2,19 +2,8 @@ import MongoDB from 'mongodb';
 import { getUsersCollection } from '../database/database.js';
 import { createBcryptPwd } from '../service/password.js';
 
-// export async function deleteAllDocument() {
-//   const query = { name: { $regex: /.*/ } };
-//   return getUsersCollection()
-//     .deleteMany(query)
-//     .then(data => {
-//       console.log('[!]deleted!!');
-//       console.log(data);
-//       return data;
-//     });
-// }
-
-function mapOptionalUser(user) {
-  return user ? { ...user, id: user._id } : user;
+export function mapOptionalUser(user) {
+  return user ? { ...user, id: user._id.toString() } : user;
 }
 export async function findByUsername(username) {
   return getUsersCollection().findOne({ username }).then(mapOptionalUser);
@@ -40,3 +29,14 @@ export async function create(username, password, name, email, url) {
       return data.insertedId.toString();
     });
 }
+
+// export async function deleteAllDocument() {
+//   const query = { name: { $regex: /.*/ } };
+//   return getUsersCollection()
+//     .deleteMany(query)
+//     .then(data => {
+//       console.log('[!]deleted all users document');
+//       console.log(data);
+//       return data;
+//     });
+// }

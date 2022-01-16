@@ -1,96 +1,75 @@
+import MongoDB from 'mongodb';
+import {
+  getTweetsCollection,
+  getUsersCollection,
+} from '../database/database.js';
 import * as userRepository from './auth.js';
 
-const tweetSchema = {
-  id: 'string',
-  text: 'string',
-  createdAt: new Date(),
-  name: 'string',
-  username: 'string',
-  url: 'optionalString',
-};
-let tweets = [
-  {
-    id: '1',
-    text: 'hello 1 by.jw',
-    createdAt: new Date().toString(),
-    userId: '1',
-  },
-  {
-    id: '2',
-    text: 'hello 2 by.jw',
-    createdAt: new Date().toString(),
-    userId: '1',
-  },
-  {
-    id: '3',
-    text: 'hello 1 by.bob',
-    createdAt: new Date().toString(),
-    userId: '2',
-  },
-  {
-    id: '4',
-    text: 'hello 2 by.bob',
-    createdAt: new Date().toString(),
-    userId: '2',
-  },
-];
 export async function getAll() {
-  return Promise.all(
-    tweets.map(async (tweet) => {
-      const { username, name, url } = await userRepository.findById(
-        tweet.userId
-      );
-      return { ...tweet, username, name, url };
-    })
-  );
+  // await deleteAllDocument();
+  return getTweetsCollection()
+    .find()
+    .sort({ createdAt: -1 })
+    .toArray()
+    .then(mapTweets);
 }
-export async function getAllByUsername(userName) {
-  return getAll().then((tweetList) =>
-    tweetList.filter((tweet) => tweet.username === userName)
-  );
+export async function getAllByUsername(username) {
+  return getTweetsCollection()
+    .find({ username })
+    .sort({ createdAt: -1 })
+    .toArray()
+    .then(mapTweets);
 }
 export async function getById(id) {
-  const found = tweets.find((tweet) => tweet.id === id);
-  if (!found) {
-    return null;
-  }
-  const { username, name, url } = await userRepository.findById(found.userId);
-  return { ...found, username, name, url };
-  // export async function getById
+  return getTweetsCollection()
+    .findOne({ _id: new MongoDB.ObjectId(id) })
+    .then(mapOptionalTweet);
 }
 export async function create(text, userId) {
+  const { name, username, url, email } = await userRepository.findById(userId);
   const tweet = {
-    id: new Date().toString(),
     text,
     createdAt: new Date().toString(),
     userId,
+    name,
+    username,
+    url,
+    email,
   };
-  tweets = [tweet, ...tweets];
-  return getById(tweet.id);
+  return getTweetsCollection()
+    .insertOne(tweet)
+    .then(data => {
+      return mapOptionalTweet({ ...tweet, _id: data.insertedId });
+    });
 }
 export async function update(id, text) {
-  const tweet = tweets.find((tweetData) => tweetData.id === id);
-  if (tweet) {
-    tweet.text = text;
-  }
-  return getById(tweet.id);
+  return getTweetsCollection()
+    .findOneAndUpdate(
+      { _id: new MongoDB.ObjectId(id) },
+      { $set: { text } },
+      { returnDocument: 'after' },
+    )
+    .then(result => result.value)
+    .then(mapOptionalTweet);
 }
 export async function remove(id) {
-  return tweets.find((tweet, index) => {
-    if (tweet.id === id) {
-      tweets.splice(index, 1);
-      return true;
-    }
-    return false;
-  });
+  return getTweetsCollection().deleteOne({ _id: new MongoDB.ObjectId(id) });
 }
-// NOTE: export function ... 이렇게 하던가, export { getAll, getAllByUsername } 이렇게 하던가..
-// export {
-//   getAll,
-//   getAllByUsername,
-//   getById,
-//   pushTweet,
-//   create,
-//   update,
-//   remove,
-// };
+function mapOptionalTweet(tweet) {
+  return tweet ? { ...tweet, id: tweet._id.toString() } : tweet;
+}
+
+function mapTweets(tweets) {
+  return tweets.map(mapOptionalTweet);
+}
+
+// export async function deleteAllDocument() {
+//   const query = { text: { $regex: /.*/ } };
+//   return getTweetsCollection()
+//     .deleteMany(query)
+//     .then(data => {
+//       console.log('[!]deleted all tweets document');
+//       console.log(data);
+//       return data;
+//     });
+// }
